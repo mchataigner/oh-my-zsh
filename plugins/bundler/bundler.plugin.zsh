@@ -3,6 +3,7 @@ alias bi="bundle install"
 alias bl="bundle list"
 alias bp="bundle package"
 alias bu="bundle update"
+alias bo="bundle open"
 
 # The following is based on https://github.com/gma/bundler-exec
 
@@ -41,3 +42,4 @@ for cmd in $bundled_commands; do
         compdef _$cmd bundled_$cmd=$cmd
   fi
 done
+
