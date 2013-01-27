@@ -14,9 +14,8 @@ parse_git_dirty() {
   if [[ "$(git config --get oh-my-zsh.hide-status)" != "1" ]]; then
     if [[ $POST_1_7_2_GIT -gt 0 ]]; then
           SUBMODULE_SYNTAX="--ignore-submodules=dirty"
-    fi  
-    GIT_STATUS=$(git status -s ${SUBMODULE_SYNTAX} 2> /dev/null | tail -n1)
-    if [[ -n $GIT_STATUS && "$GIT_STATUS" != "$CLEAN_MESSAGE" ]]; then
+    fi
+    if [[ -n $(git diff --ignore-submodules HEAD 2> /dev/null) ]]; then
       echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
     else
       echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
