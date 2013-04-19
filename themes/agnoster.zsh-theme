@@ -36,9 +36,9 @@ prompt_segment() {
   [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
   [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
   if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
-    echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
+    echo -n " %b%{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%}"
   else
-    echo -n "%{$bg%}%{$fg%} "
+    echo -n "%b%{$bg%}%{$fg%}"
   fi
   CURRENT_BG=$1
   [[ -n $3 ]] && echo -n $3
@@ -63,7 +63,8 @@ prompt_context() {
   local user=`whoami`
 
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)$user@%m"
+    prompt_segment 238 245 "%B%(!.%{%F{red}%}.%{%F{green}%})$user"
+    prompt_segment 238 245 "%B@%m"
   fi
 }
 
@@ -79,7 +80,7 @@ prompt_git() {
     else
       prompt_segment green black
     fi
-    echo -n "${ref/refs\/heads\//⭠ }$dirty"
+    echo -n " ${ref/refs\/heads\//⭠ }$dirty"
   fi
 }
 
@@ -99,7 +100,7 @@ prompt_hg() {
 				# if working copy is clean
 				prompt_segment green black
 			fi
-			echo -n $(hg prompt "⭠ {rev}@{branch}") $st
+			echo -n $(hg prompt " ⭠ {rev}@{branch}") $st
 		else
 			st=""
 			rev=$(hg id -n 2>/dev/null | sed 's/[^-0-9]//g')
@@ -113,14 +114,14 @@ prompt_hg() {
 			else
 				prompt_segment green black
 			fi
-			echo -n "⭠ $rev@$branch" $st
+			echo -n " ⭠ $rev@$branch" $st
 		fi
 	fi
 }
 
 # Dir: current working directory
 prompt_dir() {
-  prompt_segment blue black '%~'
+  prompt_segment 39 25 ' %B%~'
 }
 
 # Status:
@@ -130,11 +131,11 @@ prompt_dir() {
 prompt_status() {
   local symbols
   symbols=()
+  [[ $UID -eq 0 ]] && symbols+="%{%F{red}%}⚡"
   [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
 
-  [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
+  [[ -n "$symbols" ]] && prompt_segment 238 245 "$symbols "
 }
 
 ## Main prompt
