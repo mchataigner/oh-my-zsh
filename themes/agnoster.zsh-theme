@@ -131,11 +131,13 @@ prompt_dir() {
 prompt_status() {
   local symbols
   symbols=()
-  [[ $UID -eq 0 ]] && symbols+="%{%F{red}%}⚡"
-  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
+  [[ $UID -eq 0 ]] && symbols+="%B%{%F{red}%}!"
+  [[ $RETVAL -ne 0 ]] && symbols+="%B%{%F{red}%}X"
+  [[ -n "$symbols" ]] && prompt_segment 238 245 " $symbols "
+  local jb
+  jb=$(jobs -l | wc -l)
+  [[ $jb -gt 0 ]] && prompt_segment 238 245 "%{%F{cyan}%}$jb "
 
-  [[ -n "$symbols" ]] && prompt_segment 238 245 "$symbols "
 }
 
 ## Main prompt
