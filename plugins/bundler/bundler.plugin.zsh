@@ -1,10 +1,17 @@
 alias be="bundle exec"
-alias bi="bundle install"
 alias bl="bundle list"
 alias bp="bundle package"
 alias bo="bundle open"
 alias bu="bundle update"
 alias bo="bundle open"
+
+if [[ "$(uname)" == 'Darwin' ]]
+then
+  local cores_num="$(sysctl hw.ncpu | awk '{print $2}')"
+else
+  local cores_num="$(nproc)"
+fi
+eval "alias bi='bundle install --jobs=$cores_num'"
 
 # The following is based on https://github.com/gma/bundler-exec
 
